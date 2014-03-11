@@ -20,6 +20,6 @@ public interface Board {
      * the first line (the size) should have been removed and used to 
      * instantiate the Board object first.
      */
-    public void applyPremadeBoard(String s) throws SomeKindOfErrorException;
+    public void applyPremadeBoard(String rawBoardConfig) throws SomeKindOfErrorException;
 
 }
