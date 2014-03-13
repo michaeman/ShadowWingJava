@@ -14,6 +14,8 @@ public interface Board {
     
     /* gets the value of the cell at (x,y) */
     public char getCell(int x, int y) throws BoardEmptyException;
+    /* sets the value of the cell at (x,y) to val */
+    public void setCell(int x, int y, char val) throws BoardEmptyException;
     
     /**
      * pumps in the values of the premade board (as in spec)

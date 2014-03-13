@@ -112,6 +112,14 @@ public class BasicBoard implements Board {
         {throw new SomeKindOfErrorException("Badly formatted premade board");}
         
     }
+
+    @Override
+    public void setCell(int x, int y, char val) throws BoardEmptyException {
+        if (map.length==0) 
+        {throw new BoardEmptyException("Cannot get cell: board is empty");} 
+        
+        map[x][y].set(val);
+    }
     
     // subclasses
     private class Cell {
