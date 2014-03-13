@@ -1,1 +1,11 @@
-michael testing upload
+yo man this is what i've brainstormed during my night spent with people going crazy and playing games LOL
+
+so for the detection of finding whether a player has already won (for the test example we got, black would win with a loop),
+i was thinking we use the value of N, in this case it is 5. and use that to calculate the dimensions of the board.
+
+so we would have a variable X and variable Y, X = N = 5, and Y = 2*N-1 = 2*5-1.
+
+and we can use X and Y to iterate through the board
+
+michael likes big massive dicks in his mouth up down left right
+
