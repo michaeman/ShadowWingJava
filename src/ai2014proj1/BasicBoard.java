@@ -25,32 +25,20 @@ public class BasicBoard implements Board {
     }
     
     private void createBoard() {
-        int n = this.dimension;
+        int d = this.dimension;
+        int n = (2*d-2);
+        int maxNodes = n*n-d*(d-1)/2;
+        int nodes = 1;
         
-        // fill map with invalid/empty cells
-        map = new BasicBoard.Cell[this.maxN][];
-        int h = 2*n-2;
-        for(int r=0;r<this.maxN;r++)
+        Cell root = new Cell();
+
+        while (nodes<=maxNodes)
         {
-            BasicBoard.Cell[] row = new BasicBoard.Cell[this.maxN];        
-            for(int c=0;c<this.maxN;c++)
-            {
-                row[c] = new BasicBoard.Cell();
-                // if this cell is on the board, set it to blank
-                // column less than the full length + row height 
-                //  && row is less than half way
-                if (c<n+r && r<n){ 
-                    row[c].set('-');
-                }
-                // column less than the full length + minus some value
-                //  && row is greater than or equal to half way
-                else if (c<n+h && r>=n){
-                    row[c].set('-');
-                }
-            }
-            h--;
-            map[r] = row;
+            Cell nu = new Cell();
+
+            root.insert(nu);
         }
+
     }
 
     // Printing and shit
@@ -146,6 +134,70 @@ public class BasicBoard implements Board {
     private class Cell {
         private char contents;
         
+        public Cell left;
+        public Cell mid;
+        public Cell right;
+
+
+
+        // insert a cell into this cell
+        public int insert(Cell nu){
+            if (right == null) { // first, if there is no node to the right - we want it there
+                right = nu;
+                return 0;
+            }
+            else // if there is, we want it to insert it itself
+            {
+                int success = right.insertRightwards(nu);
+                if (success == 0)
+                {
+                    return 0;
+                }
+            }
+            
+            // if the right row is full, we get to here
+
+            if ( left == null ) // if there is no left, we want a left
+            {
+                left = nu;
+                return 0;
+            }
+            if ( mid == null ) // if there is no mid, we want a mid
+            {
+                mid = nu;
+                return 0;
+            }else{ // otherwise put it in mid
+                int success = mid.insertRightwards(nu);
+                
+                if (success == 0)
+                {return 0;}
+            }
+
+            // there is no: left.insertRightwards(nu); 
+            // because we left is left of mid in the same row. it exists only to expand on the lefthandside diagonal
+
+            return 1; // error inserting node into tree
+        }
+
+
+        // insert a cell into this cell
+        public int insert(Cell nu)
+        {
+            if (right == null) 
+            { // first, if there is no node to the right - we want it there
+                right = nu;
+                return 0;
+            }
+            else // if there is, we want it to insert it itself
+            {
+                int success = right.insertRightwards(nu);
+                if (success == 0)
+                {
+                    return 0;
+                }
+            }
+        }
+
          // create new empty cell
         public Cell(){
             contents = 'X'; // black:B, white:W, blank:-, invalid:X
