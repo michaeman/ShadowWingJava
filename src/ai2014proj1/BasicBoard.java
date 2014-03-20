@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class BasicBoard implements Board {
 
-    protected final int dimension; // dimension of the board
+    protected static int dimension; // dimension of the board
     protected final int maxN; // dimension of the board
     private BasicBoard.Cell[][] map;
     
@@ -28,7 +28,8 @@ public class BasicBoard implements Board {
     private void createBoard() {
         int d = this.dimension;
         int n = (2*d-2);
-        int maxNodes = n*n-d*(d-1)/2;
+        int h = d/2;
+        int maxNodes = n*n-h*(h-1)-h;
         int nodes = 1;
         
         Cell root = new Cell();
@@ -37,7 +38,7 @@ public class BasicBoard implements Board {
         {
             Cell nu = new Cell();
 
-            root.insert(nu);
+            root.insert(nu, d);
         }
 
     }
@@ -139,17 +140,26 @@ public class BasicBoard implements Board {
         public Cell mid;
         public Cell right;
 
+        public int insertRightwards(Cell nu, int max)
+        {
+            if (right == null) { // first, if there is no node to the right - we want it there
+                right = nu;
+                return 0;
+            }else{
+                return right.insertRightwards(nu, max+1);
+            }
+        }
 
 
         // insert a cell into this cell
-        public int insert(Cell nu){
+        public int insert(Cell nu, int dim){
             if (right == null) { // first, if there is no node to the right - we want it there
                 right = nu;
                 return 0;
             }
             else // if there is, we want it to insert it itself
             {
-                int success = right.insertRightwards(nu);
+                int success = right.insertRightwards(nu, dim-1);
                 if (success == 0)
                 {
                     return 0;
@@ -168,10 +178,21 @@ public class BasicBoard implements Board {
                 mid = nu;
                 return 0;
             }else{ // otherwise put it in mid
-                int success = mid.insertRightwards(nu);
+                int success = mid.insertRightwards(nu, dim-1);
                 
-                if (success == 0)
-                {return 0;}
+                if (success != 0)
+                {
+                    if (dim < BasicBoard.dimension/2)
+                    {
+                        return left.insert(nu, dim+1);
+                    }else if (dim == BasicBoard.dimension)
+                    {
+                        return left.insert(nu, dim);
+                    }else{
+                        return left.insert(nu, dim-1);
+                    }
+                    
+                } // fixed this
             }
 
             // there is no: left.insertRightwards(nu); 
@@ -181,23 +202,6 @@ public class BasicBoard implements Board {
         }
 
 
-        // insert a cell into this cell
-        public int insert(Cell nu)
-        {
-            if (right == null) 
-            { // first, if there is no node to the right - we want it there
-                right = nu;
-                return 0;
-            }
-            else // if there is, we want it to insert it itself
-            {
-                int success = right.insertRightwards(nu);
-                if (success == 0)
-                {
-                    return 0;
-                }
-            }
-        }
 
          // create new empty cell
         public Cell(){
